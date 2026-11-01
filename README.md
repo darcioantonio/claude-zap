@@ -1,148 +1,127 @@
-# Claude × WhatsApp
+<div align="center">
 
-**Mande pedidos pelo WhatsApp e o Claude (a inteligência artificial) faz no seu computador.**
-Você escreve ou grava um áudio no WhatsApp, o Claude entende, mexe nos seus arquivos e projetos, e responde no próprio WhatsApp. Funciona até com o celular na mão, longe do computador.
+# 💬 claude-zap
 
-> English summary at the bottom of this page.
+### Send requests on WhatsApp. Claude does the work on your computer.
 
----
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=for-the-badge&logo=windows&logoColor=white)](#-step-by-step-for-beginners)
+[![Node.js](https://img.shields.io/badge/Node.js-auto--installed-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![Claude](https://img.shields.io/badge/Claude-Code-D97757?style=for-the-badge&logo=anthropic&logoColor=white)](https://claude.ai)
+[![Install](https://img.shields.io/badge/install-1%20click-F59E0B?style=for-the-badge)](#-step-by-step-for-beginners)
+[![Support](https://img.shields.io/badge/%E2%98%95-support%20the%20project-FF813F?style=for-the-badge)](#-support-the-project)
 
-## O que é isso, em palavras simples
+[🇧🇷 Português](README.pt-BR.md) · **🇺🇸 English** · [🇪🇸 Español](README.es.md) · [🇵🇱 Polski](README.pl.md)
 
-1. Você deixa o computador ligado.
-2. Este programa fica rodando escondidinho, ao lado do relógio do Windows, com um **robozinho**.
-3. Você manda uma mensagem num grupo do WhatsApp, por exemplo: *"cria um site de receitas"* ou *"me manda um print do jogo"*.
-4. O Claude lê, faz o trabalho no computador e **responde no WhatsApp**.
-
-Áudios também funcionam: o programa transforma a sua voz em texto, **no seu próprio computador** (nada da sua voz vai para a internet nessa etapa).
+</div>
 
 ---
 
-## O que você precisa antes de começar
+## ✨ What is this
 
-| O quê | Observação |
+You type (or **record a voice note**) in a WhatsApp group, Claude understands it, **does the job on your computer** and answers right there in WhatsApp. Works from anywhere, even with your phone in hand.
+
+| 📱 You | 🤖 The robot on your PC |
 |---|---|
-| **Um computador com Windows 10 ou 11** | Precisa ficar ligado e com internet. |
-| **Uma conta do Claude** | Precisa de um plano pago do Claude (Pro ou Max) ou de uma chave de API da Anthropic. Crie em <https://claude.ai>. **Sem isso o programa instala, mas o Claude não responde.** |
-| **WhatsApp no celular** | O programa se liga ao seu WhatsApp como se fosse o "WhatsApp Web". |
-| **Internet** | Na primeira vez ele baixa uns 500 MB de componentes. |
-
-Você **não** precisa saber programar. Você **não** precisa instalar nada na mão: o arquivo `INSTALAR.bat` faz tudo.
+| *"Build a recipes website"* | Builds it, opens it, tells you |
+| *"Send me a screenshot of the game"* | Takes it and sends it on WhatsApp |
+| 🎤 A voice note | Understands your voice **locally on your PC** (your voice is not sent to the internet in this step) |
 
 ---
 
-## Passo a passo (para quem é leigo)
+## ✅ What you need
 
-### Passo 1 — Baixar o projeto do GitHub
-
-1. Abra a página do projeto no GitHub (o link que quem te passou enviou).
-2. Clique no botão verde **`< > Code`**.
-3. Clique em **`Download ZIP`**.
-4. Quando terminar de baixar, ache o arquivo `.zip` (normalmente na pasta *Downloads*), clique com o botão direito e escolha **`Extrair tudo...`** → **`Extrair`**.
-5. Vai aparecer uma pasta. **Mova essa pasta para um lugar fixo**, por exemplo a Área de Trabalho ou `C:\Projetos`. Depois não mude mais de lugar.
-
-> Dica: não deixe a pasta dentro de outra pasta com nome gigante ou com muitos acentos. `C:\Projetos\Claude-WA-Bridge` é perfeito.
-
-### Passo 2 — Instalar (um clique)
-
-1. Abra a pasta e dê **dois cliques** em **`INSTALAR.bat`**.
-2. Se o Windows mostrar uma tela azul *"O Windows protegeu o computador"*, clique em **`Mais informações`** e depois em **`Executar assim mesmo`**. (É normal para arquivos baixados da internet. Você pode abrir o `INSTALAR.bat` no Bloco de Notas antes para ver que ele só instala o Node.js, os componentes e o Claude Code.)
-3. Uma janela preta vai aparecer e instalar tudo sozinha. **Não feche.**
-4. Se ela avisar que instalou o **Node.js** e pedir para fechar e abrir de novo: **feche a janela e dê dois cliques no `INSTALAR.bat` outra vez**. Isso só acontece uma vez.
-5. Quando aparecer **PRONTO!**, aperte qualquer tecla. O programa abre.
-
-### Passo 3 — Responder as perguntas na tela
-
-Uma pergunta por tela. Em caso de dúvida, aperte **Enter** para aceitar o valor sugerido.
-
-- **Idioma** das respostas (português, inglês, espanhol...).
-- **Nome do robô** (como ele aparece no WhatsApp). Pode deixar *Claude*.
-- **Nome do grupo** do WhatsApp onde você vai conversar com ele. Pode deixar *Claude_bot*. O programa cria o grupo sozinho.
-- **Seu número de WhatsApp**, com código do país e DDD, **só números**. Exemplo: `5511999998888`.
-- **Sua conta do Claude**: o programa abre uma janelinha do navegador para você entrar na sua conta do Claude. Entre e autorize.
-
-### Passo 4 — Ligar o WhatsApp (código de 8 letras)
-
-1. A tela vai mostrar um **código de 8 caracteres**.
-2. No celular, abra o WhatsApp → **Configurações** (ou os três pontinhos) → **Dispositivos conectados** → **Conectar um dispositivo** → **Conectar com número de telefone em vez disso**.
-3. Digite o código de 8 caracteres.
-4. Pronto: o WhatsApp está ligado.
-
-### Passo 5 — Usar
-
-1. Um **robozinho** aparece perto do relógio do Windows (canto de baixo, à direita; às vezes dentro da setinha `^`).
-2. Abra o WhatsApp e entre no grupo que o programa criou (por padrão **Claude_bot**).
-3. **Escreva ou grave um áudio** pedindo o que quiser. O robô responde no grupo.
-
-**Clique com o botão direito no robozinho** para: mostrar/esconder o terminal do Claude, ver os registros (logs), reiniciar ou sair.
-
-### Nas próximas vezes
-
-Só dê dois cliques em **`__START.bat`**. Não precisa instalar de novo.
-
----
-
-## Exemplos de pedidos
-
-- *"O que tem na pasta Projetos?"*
-- *"Crie uma página de site simples com meu nome e abra."*
-- *"Me manda um print da tela do jogo que está rodando."*
-- Um **áudio** falando o que você quer.
-
-Respostas ficam curtas de propósito (para ler no celular).
-
----
-
-## Segurança (leia, é importante)
-
-- **Só você manda no robô.** Por padrão, só as mensagens do **seu próprio número** são obedecidas. Outras pessoas no grupo são ignoradas, a menos que você autorize o número delas (campo `allowed` do arquivo `data\config.json`).
-- **O Claude mexe de verdade no seu computador** e, por padrão, **sem pedir confirmação** a cada passo. Use só com pedidos que você confia, e **não deixe outras pessoas usarem seu grupo**.
-- **Nunca compartilhe a pasta `data`.** Ela guarda o login do seu WhatsApp, seu número e seu e-mail. O projeto já vem com um `.gitignore` que **impede** de subir essa pasta para o GitHub. Se você for publicar sua cópia, **não apague o `.gitignore`**.
-- Nunca mande senhas, números de cartão ou documentos pelo robô.
-
----
-
-## Problemas comuns
-
-| Problema | O que fazer |
+| | |
 |---|---|
-| *"Node.js não encontrado"* | Dê dois cliques no `INSTALAR.bat`. Se continuar, instale o Node.js "LTS" em <https://nodejs.org> e rode o `INSTALAR.bat` de novo. |
-| O robozinho não aparece | Olhe dentro da setinha `^` ao lado do relógio. Ou abra o `__START.bat` de novo. |
-| O WhatsApp desconectou | Dê dois cliques no `__START.bat` e faça o Passo 4 de novo. |
-| O robô não responde | Veja se o computador está ligado, com internet, e se a sua conta do Claude está ativa e com plano pago. Clique com o botão direito no robô → **Reiniciar**. |
-| O primeiro áudio demora | Normal: na primeira vez ele baixa o "ouvido" do robô (uns 150 MB). Depois fica rápido. |
-| Instalou mas o Claude pede login | Abra o terminal do Claude (botão direito no robô → mostrar) e siga a tela para entrar na sua conta. |
+| 🖥️ **Windows 10 or 11** | Turned on and online |
+| 🧠 **A Claude account** | A paid plan (Pro or Max) **or** an Anthropic API key. Create one at <https://claude.ai>. **Without it the app installs, but Claude will not answer.** |
+| 📱 **WhatsApp on your phone** | The app links to it like "WhatsApp Web" |
+| 🌐 **Internet** | About 500 MB are downloaded the first time |
 
-Se nada resolver, abra um **Issue** aqui no GitHub contando o que aconteceu e colando a mensagem de erro.
+**No programming skills needed.** The `INSTALAR.bat` file does everything.
 
 ---
 
-## Para quem quer saber como é por dentro (opcional)
+## 🚀 Step by step (for beginners)
+
+### 1️⃣ Download
+1. On this GitHub page click the green **`< > Code`** button.
+2. Click **`Download ZIP`**.
+3. Right-click the downloaded `.zip` → **`Extract all...`** → **`Extract`**.
+4. **Move the folder to a fixed place** (e.g. `C:\Projects`) and don't move it again.
+
+### 2️⃣ Install (one click)
+1. **Double-click `INSTALAR.bat`** (it means "install").
+2. If Windows shows *"Windows protected your PC"*: **`More info`** → **`Run anyway`**. (Normal for downloaded files. You can open `INSTALAR.bat` in Notepad first: it only installs Node.js, the components and Claude Code.)
+3. Wait for the black window to finish. **Don't close it.**
+4. If it says it installed **Node.js** and asks you to open it again: **close it and double-click `INSTALAR.bat` once more** (happens only once).
+5. When you see **PRONTO!** ("ready"), press any key: the app opens.
+
+### 3️⃣ Answer the questions
+One per screen. When in doubt, **Enter** accepts the suggested value.
+- **Language** of the answers · **Robot name** (can be *Claude*) · **Group name** (can be *Claude_bot*; it is created for you)
+- **Your phone number** with country and area code, digits only. E.g. `15551234567`
+- **Your Claude account**: a browser opens so you can sign in and authorize.
+
+### 4️⃣ Link WhatsApp
+1. The screen shows an **8-character code**.
+2. On your phone: WhatsApp → **Linked devices** → **Link a device** → **Link with phone number instead**.
+3. Type the code. Done! ✅
+
+### 5️⃣ Use it
+1. A little **robot** appears next to the Windows clock (sometimes inside the `^` arrow).
+2. Open the group in WhatsApp and **type or record a voice note**.
+3. **Right-click the robot**: show/hide the terminal, see logs, restart or quit.
+
+> 🔁 **Next times:** just double-click **`__START.bat`**.
+
+---
+
+## 🔒 Security (please read!)
+
+- 👤 **Only you control the robot.** Only messages from **your own number** are obeyed. To allow someone else, add their number to `allowed` in `data\config.json`.
+- ⚠️ **Claude really changes things on your PC**, by default **without asking at every step**. Only ask for things you trust and **don't let others use your group**.
+- 🔐 **Never share the `data` folder**: it holds your WhatsApp login. The `.gitignore` already keeps it out of GitHub; if you publish your own copy, **don't delete the `.gitignore`**.
+- 🚫 Never send passwords, cards or documents through the robot.
+
+---
+
+## 🛠️ Common problems
+
+| Problem | What to do |
+|---|---|
+| *"Node.js not found"* | Double-click `INSTALAR.bat`. If it persists, install Node.js **LTS** from <https://nodejs.org> and run it again. |
+| Robot doesn't show up | Look inside the `^` arrow near the clock, or open `__START.bat`. |
+| WhatsApp disconnected | `__START.bat` and redo step 4. |
+| Robot doesn't answer | PC on? Internet? Claude account with a paid plan? Right-click the robot → **Restart**. |
+| First voice note is slow | Normal: it downloads the robot's "ear" once (~150 MB). |
+| Claude asks to log in | Right-click the robot → show terminal → follow the screen. |
+
+Nothing worked? Open an **Issue** here describing what happened and pasting the error.
+
+---
+
+## ☕ Support the project
+
+This project is **100% free**. If it helped you and you'd like to buy me a coffee, I'd be really happy! 💛 (Totally optional.)
+
+| | |
+|---|---|
+| 🌎 **PayPal** | [**Donate with PayPal**](https://www.paypal.com/donate/?business=darcio1989%40gmail.com&currency_code=USD&item_name=claude-zap) or `darcio1989@gmail.com` |
+| 🇧🇷 **Pix** (Brazil) | Key: **`14988035885`** |
+| ⭐ **For free** | Give the repo a **star** and tell a friend! |
+
+---
+
+## 🧩 Under the hood (optional)
 
 ```
-Claude-WA-Bridge/
-  INSTALAR.bat     instala tudo (Node.js, componentes, Claude Code) e abre o programa
-  __START.bat      abre o programa nas próximas vezes
-  app/             os arquivos do programa (a "ponte" do WhatsApp, o robozinho, o transcritor de voz)
-  data/            SEUS dados: login do WhatsApp, configurações, logs. Privado, nunca suba para o GitHub
-  .claude/skills/  habilidades extras do Claude
+claude-zap/
+  INSTALAR.bat   installs everything (Node.js, components, Claude Code) and opens the app
+  __START.bat    opens the app on later runs
+  app/           the WhatsApp "bridge", the tray robot and the voice transcriber
+  data/          YOUR data (WhatsApp login, config, logs) — private
 ```
 
-- A "ponte" usa a biblioteca [Baileys](https://github.com/WhiskeySockets/Baileys) para falar com o WhatsApp.
-- A voz vira texto com o modelo Whisper rodando **no seu computador** (transformers.js).
-- A resposta vem do [Claude Code](https://docs.claude.com/en/docs/claude-code), a ferramenta oficial da Anthropic.
+Uses [Baileys](https://github.com/WhiskeySockets/Baileys) for WhatsApp, local Whisper (transformers.js) for voice and Anthropic's [Claude Code](https://docs.claude.com/en/docs/claude-code).
 
-> Este projeto **não é oficial** nem ligado ao WhatsApp/Meta ou à Anthropic. Use por sua conta e risco, e respeite os termos de uso do WhatsApp (use com a sua conta pessoal, sem spam).
-
----
-
-## English summary
-
-**Claude × WhatsApp** lets you control Claude Code on your Windows PC from a WhatsApp group (text or voice notes).
-
-1. Download the repo as a ZIP (GitHub → *Code* → *Download ZIP*), extract it to a fixed folder.
-2. Double-click **`INSTALAR.bat`** (installs Node.js via winget if missing, the npm packages and Claude Code, then starts the wizard).
-3. Answer the wizard, link WhatsApp with the 8-character pairing code (*Linked devices → Link with phone number*).
-4. A tray robot appears next to the clock; message the group and Claude answers.
-
-Requires Windows 10/11, Node.js (auto-installed), a paid Claude plan or Anthropic API key, and WhatsApp. Next runs: double-click **`__START.bat`**. The `data/` folder holds your private WhatsApp session and settings and is excluded by `.gitignore`: never publish it.
+> **Unofficial** project, not affiliated with WhatsApp/Meta or Anthropic. Use at your own risk and respect WhatsApp's terms (personal account, no spam).
