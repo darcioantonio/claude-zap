@@ -1,0 +1,14 @@
+# NUNCA suba estas coisas para o GitHub: sao SUAS, privadas.
+# A pasta data/ guarda o login do seu WhatsApp, seu numero, seus e-mails, mensagens e audios.
+data/
+
+# arquivos baixados na instalacao (cada pessoa baixa os seus)
+node_modules/
+app/node_modules/
+
+# copias de seguranca e lixo
+*.bak
+*.bak-*
+*.log
+Thumbs.db
+desktop.ini
