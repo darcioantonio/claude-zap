@@ -63,7 +63,7 @@ fs.mkdirSync('inbox', { recursive: true })
 const out = (tag, obj) => {
   const line = tag + ' ' + (typeof obj === 'string' ? obj : JSON.stringify(obj))
   console.log(line)
-  if (tag === 'MSG') { try { fs.appendFileSync(path.join('logs', 'mensagens.log'), Date.now() + ' ' + line + '\n') } catch {} } // permanent history (bridge.log is recreated on restart): Claude checks it against logs/feitas.log to resume unread requests
+  if (tag === 'MSG') { msgCount++; try { fs.appendFileSync(path.join('logs', 'mensagens.log'), Date.now() + ' ' + line + '\n') } catch {} } // permanent history (bridge.log is recreated on restart): Claude checks it against logs/feitas.log to resume unread requests
 }
 
 // keep only the last 48h of history so the logs never grow huge; feitas.log keeps only ids still present in mensagens.log
@@ -85,6 +85,7 @@ pruneLogs()
 setInterval(pruneLogs, 3600 * 1000)
 
 let retries = 0
+let msgCount = 0 // MSG lines emitted so far (used to pace the inbox)
 async function start() {
   // new pairing (no saved login) = fresh start: archive old history so Claude does not try to redo old pending messages
   if (!fs.existsSync('auth/creds.json') && !globalThis.__archived) {
@@ -168,8 +169,12 @@ async function start() {
       else out('LOGGED_OUT', 'delete auth/ and restart')
     }
   })
-  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+  // one message at a time: batches (e.g. the backlog delivered on reconnect) wait in line, with a pause between messages
+  let inboxChain = Promise.resolve()
+  sock.ev.on('messages.upsert', (u) => { inboxChain = inboxChain.then(() => handleUpsert(u)).catch(() => {}) })
+  const handleUpsert = async ({ messages, type }) => {
     for (const m of messages) {
+      const before = msgCount
       try {
         const grp = byJid.get(m.key.remoteJid)
         if (!m.message || !grp) continue
@@ -202,9 +207,9 @@ async function start() {
         }
         out('MSG', ev)
         if (cfg.autoRun) enqueue(cfg, ev, (t) => sock.sendMessage(m.key.remoteJid, { text: t }))
-      } catch (e) { out('ERR', String(e)) }
+      } catch (e) { out('ERR', String(e)) } finally { if (msgCount !== before) await new Promise((r) => setTimeout(r, 2500 + Math.random() * 2500)) } // pause only after a message that went to Claude
     }
-  })
+  }
 }
 
 const MIMES = { '.apk': 'application/vnd.android.package-archive', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg; codecs=opus', '.m4a': 'audio/mp4', '.wav': 'audio/wav', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain', '.json': 'application/json' }
