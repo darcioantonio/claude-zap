@@ -100,6 +100,29 @@ Nic nie pomogło? Otwórz **Issue** tutaj, opisz co się stało i wklej błąd.
 
 ---
 
+## 🆘 WhatsApp przestał odpowiadać / rozłączył się? (krok po kroku)
+
+WhatsApp oficjalnie nie wspiera takich programów i czasem **rozłącza lub ogranicza** połączenie. Da się to naprawić. Typowe objawy: robot nie odpowiada, widać `LOGGED_OUT`, `401`, `rate-overlimit` albo nie znaleziono grupy.
+
+**Łatwy sposób:** powiedz swojemu Claude (w terminalu robota): *"WhatsApp przestał działać, napraw to"*. Przeczyta zasady (`app/INSTRUCOES.md`), sprawdzi błąd i poprowadzi Cię krok po kroku.
+
+**Sposób ręczny (reset połączenia):**
+1. Zamknij robocika przy zegarze (prawy przycisk → **Zakończ**).
+2. W telefonie: WhatsApp → **Połączone urządzenia** → dotknij urządzenia programu (Ubuntu/Chrome) → **Wyloguj**.
+3. Na komputerze otwórz folder `data` i **zmień nazwę** folderu `auth` na `auth-stary` (nie usuwaj).
+4. **Poczekaj 15 do 30 minut.** To ważne: ponowna próba od razu pogarsza limit.
+5. Uruchom `__START.bat` **tylko raz** i odpowiedz na pytania.
+6. W telefonie: **Połączone urządzenia → Połącz urządzenie → Połącz za pomocą numeru telefonu** i wpisz 8-znakowy kod.
+7. Wyślij "cześć" do grupy i poczekaj około 30 sekund.
+
+Przy ponownym parowaniu program **archiwizuje starą historię** (`data/logs/arquivo-...`) i czyta tylko **nowe** wiadomości.
+
+**Aby zmniejszyć ryzyko blokady:** używaj **drugiego numeru** (nie głównego); nie powtarzaj parowania wiele razy pod rząd; nie wysyłaj wielu wiadomości naraz; nie używaj w dużych grupach z nieznajomymi. Program już udaje "pisanie…", rozdziela odpowiedzi i łączy się ponownie powoli.
+
+Jeśli WhatsApp wielokrotnie odrzuca kod lub pisze, że numer jest ograniczony/zablokowany, **poczekaj 24 h** lub użyj **innego numeru**.
+
+---
+
 ## ☕ Wesprzyj projekt
 
 Ten projekt jest **w 100% darmowy**. Jeśli Ci pomógł i chcesz postawić mi kawę, będzie mi bardzo miło! 💛 (Całkowicie dobrowolnie.)

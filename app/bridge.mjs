@@ -84,18 +84,47 @@ function pruneLogs() {
 pruneLogs()
 setInterval(pruneLogs, 3600 * 1000)
 
+let retries = 0
 async function start() {
+  // new pairing (no saved login) = fresh start: archive old history so Claude does not try to redo old pending messages
+  if (!fs.existsSync('auth/creds.json') && !globalThis.__archived) {
+    globalThis.__archived = true
+    try { fs.writeFileSync('since.txt', String(Math.floor(Date.now() / 1000))) } catch {} // from now on, ignore anything sent before this moment
+    try {
+      const dest = path.join('logs', 'arquivo-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-'))
+      let moved = false
+      for (const f of ['mensagens.log', 'feitas.log']) {
+        const p = path.join('logs', f)
+        if (fs.existsSync(p) && fs.statSync(p).size > 0) { fs.mkdirSync(dest, { recursive: true }); fs.renameSync(p, path.join(dest, f)); moved = true }
+      }
+      if (moved) out('RESET', 'new pairing: old history archived in ' + dest)
+    } catch (e) { out('ERR', String(e)) }
+  }
   const { state, saveCreds } = await useMultiFileAuthState('auth')
   const { version } = await fetchLatestBaileysVersion()
-  sock = makeWASocket({ version, auth: state, logger: log, browser: ['Ubuntu', 'Chrome', '22.04.4'], syncFullHistory: false })
+  sock = makeWASocket({ version, auth: state, logger: log, browser: ['Ubuntu', 'Chrome', '22.04.4'], syncFullHistory: false, markOnlineOnConnect: false })
   // every message we send gets "<robot> <botName>: " in front (callers send plain text)
   const rawSend = sock.sendMessage.bind(sock)
   const PREFIX = '\u{1F916} ' + (cfg.botName || 'Claude') + ': '
   const deco = (t) => (typeof t === 'string' && !t.startsWith(PREFIX) ? PREFIX + t.replace(/^\[Claude\]:?\s*/, '') : t)
+  // anti-ban: all sends go through one queue with a random human-like gap and a "typing..." presence
+  const rnd = (a, b) => a + Math.random() * (b - a)
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+  let sendChain = Promise.resolve()
   sock.sendMessage = (jid, c, o) => {
     if (c.text) c = { ...c, text: deco(c.text) }
     if (c.caption) c = { ...c, caption: deco(c.caption) }
-    return rawSend(jid, c, o)
+    const job = sendChain.then(async () => {
+      try {
+        if (!c.react) { await sock.sendPresenceUpdate(c.audio ? 'recording' : 'composing', jid); await sleep(rnd(800, 2200) + Math.min((c.text || '').length * 15, 3000)) }
+      } catch {}
+      const r = await rawSend(jid, c, o)
+      try { await sock.sendPresenceUpdate('paused', jid) } catch {}
+      await sleep(rnd(1200, 3000))
+      return r
+    })
+    sendChain = job.catch(() => {})
+    return job
   }
   sock.ev.on('creds.update', saveCreds)
   sock.ev.on('connection.update', async (u) => {
@@ -109,7 +138,14 @@ async function start() {
     }
     if (u.connection === 'open') {
       try {
-        const groups = await sock.groupFetchAllParticipating()
+        let groups, tries = 0
+        for (;;) { // WhatsApp answers rate-overlimit right after pairing: wait and retry instead of giving up with no group
+          try { groups = await sock.groupFetchAllParticipating(); break } catch (e) {
+            if (++tries > 6 || !/rate-overlimit/.test(String(e))) throw e
+            out('WAIT', 'rate-overlimit fetching groups, retry in ' + 60 * tries + 's')
+            await new Promise((r) => setTimeout(r, 60000 * tries))
+          }
+        }
         const all = Object.values(groups)
         const g = all.find((x) => x.subject === GROUP)
         groupJid = g ? g.id : null
@@ -120,6 +156,7 @@ async function start() {
           if (x) { byName.set(e.name, x.id); byJid.set(x.id, { name: e.name, dir: e.dir || '' }) }
         }
       } catch (e) { out('ERR', String(e)) }
+      retries = 0
       out('CONNECTED', { group: groupJid, groups: [...byName.keys()] })
       if (groupJid) syncGroupMembers()
       warmUp() // load the speech model in the background so the first voice message is fast
@@ -127,7 +164,7 @@ async function start() {
     if (u.connection === 'close') {
       const code = u.lastDisconnect?.error?.output?.statusCode
       out('CLOSED', { code })
-      if (code !== DisconnectReason.loggedOut) setTimeout(start, 2000)
+      if (code !== DisconnectReason.loggedOut) { retries++; setTimeout(start, Math.min(2000 * 2 ** (retries - 1), 60000) + Math.random() * 1000) }
       else out('LOGGED_OUT', 'delete auth/ and restart')
     }
   })
@@ -141,12 +178,15 @@ async function start() {
         const text = mm.conversation || mm.extendedTextMessage?.text || mm.imageMessage?.caption || mm.documentMessage?.caption || mm.videoMessage?.caption || ''
         if (text.startsWith('\u{1F916} ') || text.startsWith('[Claude]')) continue
         if (type !== 'notify') continue
+        let since = 0
+        try { since = Number(fs.readFileSync('since.txt', 'utf8')) || 0 } catch {}
+        if (since && Number(m.messageTimestamp?.low ?? m.messageTimestamp ?? 0) < since) continue // older than the last reset/pairing: never read it
         const from = await senderNumber(m)
         if (!m.key.fromMe && !allowedNums.has(from)) { out('IGNORED', { from }); continue } // only the owner and authorized numbers
         const ev = { id: m.key.id, group: grp.name, dir: grp.dir, fromMe: !!m.key.fromMe, authorized: true, from, who: allowedNums.get(from) || '', text }
         recentKeys.set(m.key.id, m.key)
         if (recentKeys.size > 300) recentKeys.delete(recentKeys.keys().next().value)
-        sock.sendMessage(m.key.remoteJid, { react: { text: '\u{1F440}', key: m.key } }).catch(() => {}) // instant "seen" mark, before download/transcription
+        setTimeout(() => sock.readMessages([m.key]).catch(() => {}), 1000 + Math.random() * 2500) // human-like read receipt instead of an instant bot reaction
         const media = mm.imageMessage || mm.documentMessage || mm.videoMessage || mm.audioMessage
         if (media) {
           const buf = await downloadMediaMessage(m, 'buffer', {}, { logger: log, reuploadRequest: sock.updateMediaMessage })

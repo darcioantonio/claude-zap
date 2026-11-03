@@ -100,6 +100,29 @@ Nada resolveu? Abra um **Issue** aqui contando o que houve e colando o erro.
 
 ---
 
+## 🆘 O WhatsApp parou de responder / desconectou? (passo a passo)
+
+O WhatsApp não é oficialmente compatível com este tipo de programa e às vezes **desconecta ou limita** a conexão. Isso tem conserto. Sinais comuns: o robô não responde, aparece `LOGGED_OUT`, `401`, `rate-overlimit`, ou o grupo não é encontrado.
+
+**Jeito fácil:** diga ao seu Claude (no terminal do robô): *"o WhatsApp parou, resolve"*. Ele lê as regras (`app/INSTRUCOES.md`), olha o erro e te guia passo a passo.
+
+**Jeito manual (resetar a conexão):**
+1. Feche o robozinho perto do relógio (botão direito → **Sair**).
+2. No celular: WhatsApp → **Aparelhos conectados** → toque no aparelho do programa (Ubuntu/Chrome) → **Desconectar**.
+3. No PC, abra a pasta `data` e **renomeie** a pasta `auth` para `auth-antigo` (não apague).
+4. **Espere 15 a 30 minutos.** Isso é importante: tentar de novo logo piora o limite.
+5. Abra o `__START.bat` **uma vez só** e siga as perguntas.
+6. No celular: **Aparelhos conectados → Conectar um aparelho → Conectar com número de telefone** e digite o código de 8 caracteres.
+7. Mande um "oi" no grupo e espere uns 30 segundos.
+
+Ao parear de novo, o programa **arquiva o histórico antigo** (`data/logs/arquivo-...`) e só lê mensagens **novas**.
+
+**Para reduzir o risco de bloqueio:** use um **número secundário** (não o principal); não refaça o pareamento várias vezes seguidas; não mande muitas mensagens de uma vez; não use em grupos grandes com desconhecidos. O programa já finge "digitando…", espaça as respostas e reconecta devagar.
+
+Se o WhatsApp recusar o código várias vezes ou disser que o número está limitado/banido, **espere 24 h** ou use **outro número**.
+
+---
+
 ## ☕ Apoie o projeto
 
 Este projeto é **100% gratuito**. Se ele te ajudou e você quiser retribuir com um cafezinho, fico muito feliz! 💛 (Totalmente opcional.)

@@ -100,6 +100,29 @@ Nothing worked? Open an **Issue** here describing what happened and pasting the 
 
 ---
 
+## 🆘 WhatsApp stopped replying / got disconnected? (step by step)
+
+WhatsApp does not officially support this kind of program and sometimes **disconnects or rate-limits** it. It can be fixed. Typical signs: the robot does not answer, you see `LOGGED_OUT`, `401`, `rate-overlimit`, or the group is not found.
+
+**Easy way:** tell your Claude (in the robot's terminal): *"WhatsApp stopped, fix it"*. It reads the rules (`app/INSTRUCOES.md`), checks the error and guides you step by step.
+
+**Manual way (reset the connection):**
+1. Close the little robot near the clock (right-click → **Quit**).
+2. On your phone: WhatsApp → **Linked devices** → tap the program's device (Ubuntu/Chrome) → **Log out**.
+3. On the PC, open the `data` folder and **rename** the `auth` folder to `auth-old` (do not delete it).
+4. **Wait 15 to 30 minutes.** This matters: retrying right away makes the limit worse.
+5. Open `__START.bat` **only once** and answer the questions.
+6. On your phone: **Linked devices → Link a device → Link with phone number** and type the 8-character code.
+7. Send "hi" in the group and wait about 30 seconds.
+
+When you pair again, the program **archives the old history** (`data/logs/arquivo-...`) and only reads **new** messages.
+
+**To lower the risk of being blocked:** use a **secondary number** (not your main one); do not repeat pairing many times in a row; do not send many messages at once; do not use it in big groups with strangers. The program already shows "typing…", spaces out replies and reconnects slowly.
+
+If WhatsApp keeps rejecting the code or says the number is limited/banned, **wait 24 h** or use **another number**.
+
+---
+
 ## ☕ Support the project
 
 This project is **100% free**. If it helped you and you'd like to buy me a coffee, I'd be really happy! 💛 (Totally optional.)
